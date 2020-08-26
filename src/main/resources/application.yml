@@ -4,6 +4,23 @@ server:
 spring:
   profiles:
     active: dev
+
+logging:
+  # 打印的日志级别配置
+  level:
+    # 指明日志打印范围，不配置会报错
+    com.codebear: info
+  file:
+    # 在当前项目下生成spring boot.log日志，也可指定别的位置，如E:...（一般以配置下面的path为主）
+    #name: E:/springboot.log
+    # 在当前磁盘的根目录下创建spring文件夹和里面的log文件夹，使用spring.log作为默认文件
+    path: /spring/log
+  pattern:
+    # 在控制台输出的日志格式
+    dateformat: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5Level %logger{50} - %msg%n'
+    # 在文件输出的日志格式
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} === [%thread] === %-5Level %logger{50} === %msg%n'
+
 ---
 server:
   port: 8181
