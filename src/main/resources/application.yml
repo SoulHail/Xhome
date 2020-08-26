@@ -1,0 +1,38 @@
+# yml中支持多模块环境配置，用 "---"分开即可
+server:
+  port: 8180
+spring:
+  profiles:
+    active: dev
+---
+server:
+  port: 8181
+spring:
+  profiles: dev
+
+---
+server:
+  port: 8182
+spring:
+  profiles: prod
+
+---
+server:
+  port: 8183
+spring:
+  profiles: test
+
+---
+
+#定义某些系统常量
+person:
+  name: 张三
+  age: 18
+  boss: false
+  birth: 2020/11/11
+  maps: {k1: v1,k2: v2}
+  lists:
+    - apple
+    - banane
+    - orange
+

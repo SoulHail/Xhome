@@ -1,0 +1,28 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'com.codebear'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    compile('org.projectlombok:lombok')
+    compile('org.apache.commons:commons-lang3:3.1') // StringUtils依赖包
+    compile('org.springframework.boot:spring-boot-configuration-processor') // 导入配置文件处理器，配置文件进行绑定会有提示
+}
+
+test {
+    useJUnitPlatform()
+}
