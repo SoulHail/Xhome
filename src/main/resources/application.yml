@@ -4,22 +4,53 @@ server:
 spring:
   profiles:
     active: dev
+  # 数据源配置
+  datasource:
+    #url: jdbc:mysql://localhost:3306/kq?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/kq?serverTimezone=UTC
+    username: root
+    password: root123
+    # 指定数据源类型为druid
+    type: com.alibaba.druid.pool.DruidDataSource
 
-logging:
-  # 打印的日志级别配置
-  level:
-    # 指明日志打印范围，不配置会报错
-    com.codebear: info
-  file:
-    # 在当前项目下生成spring boot.log日志，也可指定别的位置，如E:...（一般以配置下面的path为主）
-    #name: E:/springboot.log
-    # 在当前磁盘的根目录下创建spring文件夹和里面的log文件夹，使用spring.log作为默认文件
-    path: /spring/log
-  pattern:
-    # 在控制台输出的日志格式
-    dateformat: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5Level %logger{50} - %msg%n'
-    # 在文件输出的日志格式
-    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} === [%thread] === %-5Level %logger{50} === %msg%n'
+    # druid下的其他属性配置；需要另写配置文件才能生效，见DruidConfig类
+    initialSize: 5 # 数据库连接池大小
+    minIdle: 5
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    maxEvictableIdleTimeMillis:  3000000 # 连接保持50分钟，单位是毫秒,因为公司防火墙长连接保持最长时间为1小时；此参数一定要结合实际情况进行配置。
+    validationQuery: select 1 from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    #        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+mybatis:
+  # mapper映射文件位置
+  mapper-locations: mapper/*.xml
+  configuration:
+    default-statement-timeout: 5
+
+#logging:
+#  # 打印的日志级别配置
+#  level:
+#    # 指明日志打印范围，不配置会报错
+#    com.codebear: info
+#  file:
+#    # 在当前项目下生成spring boot.log日志，也可指定别的位置，如E:...（一般以配置下面的path为主）
+#    #name: E:/springboot.log
+#    # 在当前磁盘的根目录下创建spring文件夹和里面的log文件夹，使用spring.log作为默认文件
+#    path: /spring/log
+#  pattern:
+#    # 在控制台输出的日志格式
+#    dateformat: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5Level %logger{50} - %msg%n'
+#    # 在文件输出的日志格式
+#    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} === [%thread] === %-5Level %logger{50} === %msg%n'
 
 ---
 server:

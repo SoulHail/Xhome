@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * 单元测试
  */
@@ -15,10 +19,13 @@ import org.springframework.context.ApplicationContext;
 class XhomeApplicationTests {
 
     @Autowired
-    Person person;
+    private Person person;
 
     @Autowired
-    ApplicationContext ioc;
+    private ApplicationContext ioc;
+
+    @Autowired
+    private DataSource dataSource;
 
     /**
      * 测试日记信息打印
@@ -30,6 +37,17 @@ class XhomeApplicationTests {
         log.info("这是info级别日志信息。。。");
         log.warn("这是warn级别日志信息。。。");
         log.error("这是error级别日志信息。。。");
+    }
+
+    /**
+     * 测试系统数据源
+     */
+    @Test
+    public void testData() throws SQLException {
+        System.out.println(dataSource.getClass());
+        Connection connection = dataSource.getConnection();
+        System.out.println(connection);
+        connection.close();
     }
 
     /**
