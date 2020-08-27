@@ -52,6 +52,8 @@ mybatis:
 #    # 在文件输出的日志格式
 #    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} === [%thread] === %-5Level %logger{50} === %msg%n'
 
+# 打印项目运行期的具体日志，包含一些底层配置信息
+# debug: true
 ---
 server:
   port: 8181

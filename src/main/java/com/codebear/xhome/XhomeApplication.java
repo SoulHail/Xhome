@@ -3,15 +3,19 @@ package com.codebear.xhome;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
 
 /**
  * 主启动类
  * @ImportResource： 项目启动时，除全局配置外，额外加载指定的配置文件
  * 但在SpringBoot中，常用配置类来取代其他的一些配置文件
+ *
+ * @EnableCaching: 开启缓存功能
  */
 @Slf4j
 @SpringBootApplication
+@EnableCaching
 //@ImportResource(locations = {"classpath:beans.xml"})
 public class XhomeApplication {
 
