@@ -1,10 +1,12 @@
 package com.codebear.xhome;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 主启动类
@@ -15,7 +17,9 @@ import org.springframework.context.annotation.ImportResource;
  */
 @Slf4j
 @SpringBootApplication
-@EnableCaching
+@EnableCaching // 开启基于注解的cache缓存模式
+//@EnableAsync // 开启异步注解功能
+//@EnableRabbit //开启基于注解的RabbitMq模式
 //@ImportResource(locations = {"classpath:beans.xml"})
 public class XhomeApplication {
 

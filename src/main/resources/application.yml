@@ -29,6 +29,12 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     #        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  # 邮件配置
+  mail:
+    username: 1050848292@qq.com
+    password: bfnwlguvdbdlbeah #授权码
+    host: smtp.qq.com
+    #properties: mail.smtp.ssl.enable = true # 安全性设置
 
 mybatis:
   # mapper映射文件位置

@@ -31,6 +31,11 @@ public class HelloController {
         return "Hello Xhome!";
     }
 
+    @RequestMapping("/level1/hello")
+    public String helloStep() {
+        return "Hello VIP!";
+    }
+
     /**
      * 注：一般都是将方法入参和方法返回结果进行绑定，来进行缓存；用 @CachePut注解时需要注；
      * @Cacheable： 将方法的运行结果进行缓存，以后要相同的数据，直接从缓存中获取，不用调用方法；

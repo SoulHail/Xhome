@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Druid配置类
  * 整合Druid数据源的配置信息
  * 下面平台配置完成后，启动项目访问http://localhost:8181/druid，可访问监控到的数据信息
  */
