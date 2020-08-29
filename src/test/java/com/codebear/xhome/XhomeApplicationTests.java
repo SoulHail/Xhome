@@ -160,8 +160,8 @@ class XhomeApplicationTests {
         // 邮件设置
         message.setSubject("通知-今晚开会"); // 标题
         message.setText("今晚8：30开会"); // 内容
-        message.setTo("923640961@qq.com","2952221500@qq.com"); // 给谁发,可写多个地址，不限于QQ邮箱
-        message.setFrom("1050848292@qq.com"); // 邮件是谁发的
+        message.setTo("aaa@qq.com","bbb@qq.com"); // 给谁发,可写多个地址，不限于QQ邮箱
+        message.setFrom("ccc@qq.com"); // 邮件是谁发的
         mailSender.send(message);
     }
 
@@ -177,8 +177,8 @@ class XhomeApplicationTests {
         // 邮件设置
         helper.setSubject("通知-今晚开会"); // 标题
         helper.setText("<b style='color:red'>今晚9：30开会</b>",true); // 内容,可设置样式，样式生效，需把html属性设置为true
-        helper.setTo("923640961@qq.com");
-        helper.setFrom("1050848292@qq.com"); // 邮件是谁发的
+        helper.setTo("aaa@qq.com");
+        helper.setFrom("ccc@qq.com"); // 邮件是谁发的
 
         // 上传文件,可传多个文件；文件名，文件路径
         helper.addAttachment("1.jpg",new File("E:\\idea背景\\1.jpg"));
