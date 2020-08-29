@@ -29,6 +29,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security") // security安全相关，类似拦截器
     compile('org.apache.commons:commons-lang3:3.1') // StringUtils依赖包
     compile('org.springframework.boot:spring-boot-configuration-processor') // 导入配置文件处理器，配置文件进行绑定会有提示
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.3.3.RELEASE' // 热部署 devtools .改完代码Ctrl + FN + F9生效
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.3.RELEASE' // Spring框架内置管理器
+
 }
 
 test {

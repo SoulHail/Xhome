@@ -31,16 +31,29 @@ spring:
     #        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   # 邮件配置
   mail:
-    username: 1050848292@qq.com
+    username: ccc@qq.com
     password: bfnwlguvdbdlbeah #授权码
     host: smtp.qq.com
     #properties: mail.smtp.ssl.enable = true # 安全性设置
+
+#  rabbitmq:
+#    host: localhost
+#    username: guest
+#    password: guest
 
 mybatis:
   # mapper映射文件位置
   mapper-locations: mapper/*.xml
   configuration:
     default-statement-timeout: 5
+
+# 监控信息授权
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+
 
 #logging:
 #  # 打印的日志级别配置
