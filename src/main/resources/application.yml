@@ -10,7 +10,18 @@ spring:
     url: jdbc:mysql://localhost:3306/kq?serverTimezone=UTC
     username: root
     password: root123
-    # 指定数据源类型为druid
+    # 虚拟机数据库
+#    url: jdbc:mysql://192.168.232.130:3306/jpa?serverTimezone=UTC
+#    username: root
+#    password: 123456
+  # 运行JPA自动创建数据表
+#  jpa:
+#    hibernate:
+#      # 更新或者创建数据表结构
+#      ddl-auto: update
+#    # 指定数据源类型为druid
+#    show-sql: true
+
     type: com.alibaba.druid.pool.DruidDataSource
 
     # druid下的其他属性配置；需要另写配置文件才能生效，见DruidConfig类

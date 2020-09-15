@@ -19,7 +19,7 @@ dependencies {
     }
 
     compile('org.projectlombok:lombok')
-    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0' // 数据库
+    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0' // mybatis数据库
     compile 'mysql:mysql-connector-java' // mysql
     compile group: 'com.alibaba', name: 'druid', version: '1.1.8' // druid数据源
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.3.RELEASE' // JPA
