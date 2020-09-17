@@ -1,6 +1,7 @@
 package com.codebear.xhome;
 
 import com.codebear.xhome.bean.Person;
+import com.codebear.xhome.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -11,6 +12,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -47,12 +50,22 @@ class XhomeApplicationTests {
     @Autowired
     private JavaMailSenderImpl mailSender;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate; // 操作k-v都是字符串的
+
+    @Autowired
+    private RedisTemplate redisTemplate; // k-v不限
+
+    @Autowired
+    private RedisTemplate<Object, User> userRedisTemplate;
+
     /**********************************************************************************************************/
 
     /**
      * 测试日记信息打印
      */
     @Test
+
     public void testLog() {
         log.trace("这是trace级别日志信息。。。");
         log.debug("这是debug级别日志信息。。。");
@@ -101,7 +114,7 @@ class XhomeApplicationTests {
      * 测试消息队列
      * 1、单播（点对点）
      * 2、广播
-     *
+     * <p>
      * 跨系统接收消费信息，见RabbitMqService
      */
     @Test
@@ -138,10 +151,10 @@ class XhomeApplicationTests {
         amqpAdmin.declareExchange(new DirectExchange("amqpadmin.exchange"));
 
         // 创建队列，durable 是否是持久化
-        amqpAdmin.declareQueue(new Queue("队列名称",true));
+        amqpAdmin.declareQueue(new Queue("队列名称", true));
 
         // 创建绑定规则，将Exchange和queue绑定起来
-        amqpAdmin.declareBinding(new Binding("队列名称",Binding.DestinationType.QUEUE,"交换器名称","路由键,eg：amqp.haha",null));
+        amqpAdmin.declareBinding(new Binding("队列名称", Binding.DestinationType.QUEUE, "交换器名称", "路由键,eg：amqp.haha", null));
 
         // 删除操作,只需要传名字即可
         amqpAdmin.deleteQueue("");
@@ -160,7 +173,7 @@ class XhomeApplicationTests {
         // 邮件设置
         message.setSubject("通知-今晚开会"); // 标题
         message.setText("今晚8：30开会"); // 内容
-        message.setTo("aaa@qq.com","bbb@qq.com"); // 给谁发,可写多个地址，不限于QQ邮箱
+        message.setTo("aaa@qq.com", "bbb@qq.com"); // 给谁发,可写多个地址，不限于QQ邮箱
         message.setFrom("ccc@qq.com"); // 邮件是谁发的
         mailSender.send(message);
     }
@@ -172,21 +185,91 @@ class XhomeApplicationTests {
     public void setHardMailSender() throws MessagingException {
         // 创建一个复杂的消息邮件
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
         // 邮件设置
         helper.setSubject("通知-今晚开会"); // 标题
-        helper.setText("<b style='color:red'>今晚9：30开会</b>",true); // 内容,可设置样式，样式生效，需把html属性设置为true
+        helper.setText("<b style='color:red'>今晚9：30开会</b>", true); // 内容,可设置样式，样式生效，需把html属性设置为true
         helper.setTo("aaa@qq.com");
         helper.setFrom("ccc@qq.com"); // 邮件是谁发的
 
         // 上传文件,可传多个文件；文件名，文件路径
-        helper.addAttachment("1.jpg",new File("E:\\idea背景\\1.jpg"));
-        helper.addAttachment("2.jpg",new File("E:\\idea背景\\2.jpg"));
+        helper.addAttachment("1.jpg", new File("E:\\idea背景\\1.jpg"));
+        helper.addAttachment("2.jpg", new File("E:\\idea背景\\2.jpg"));
         mailSender.send(mimeMessage);
     }
 
     /**********************************************************************************************************/
+
+    /**
+     * redis测试--针对字符串对象
+     * <p>
+     * Redis常见的操作五大数据类型
+     * String、List、Set、Hash、ZSet(有序集合)
+     * stringRedisTemplate.opsForValue()--String
+     * stringRedisTemplate.opsForList()--List
+     * stringRedisTemplate.opsForSet()--Set
+     * stringRedisTemplate.opsForHash()--Hash
+     * stringRedisTemplate.opsForZSet()--ZSet
+     */
+    @Test
+    public void redisTest() {
+        /**
+         * 数据添加
+         */
+        // 给redis保存String数据
+        stringRedisTemplate.opsForValue().append("msg", "hello");
+
+        // 给redis保存list数组
+        stringRedisTemplate.opsForList().leftPush("mylist", "1");
+        stringRedisTemplate.opsForList().leftPush("mylist", "2");
+        stringRedisTemplate.opsForList().leftPush("mylist", "3");
+        stringRedisTemplate.opsForList().leftPush("mylist", "4");
+        stringRedisTemplate.opsForList().leftPush("mylist", "5");
+
+        // 给redis保存Set数组
+        stringRedisTemplate.opsForSet().add("set", "zhangsan");
+        stringRedisTemplate.opsForSet().add("set", "lisi");
+
+        /**
+         * 数据获取
+         */
+        // 读取redis存储的String数据
+        String a = stringRedisTemplate.opsForValue().get("msg");
+        System.out.println(a);
+
+        // 读取redis存储的List数据
+        String b = stringRedisTemplate.opsForList().leftPop("mylist");
+        String c = stringRedisTemplate.opsForList().rightPop("mylist");
+        System.out.println(b);
+        System.out.println(c);
+
+        // 读取redis存储的Set数据
+        String d = stringRedisTemplate.opsForSet().pop("set");
+        System.out.println(d);
+    }
+
+    /**
+     * redis测试--针对对象
+     * redisTemplate同样也有操作这几种类型的方法
+     * 针对对象操作,被操作对象需要实现Serializable接口
+     */
+    @Test
+    public void redisObjTest() {
+        /**
+         * 数据添加
+         */
+        User user = User.builder()
+                .id(3)
+                .name("张三")
+                .email("38472874@qq.com")
+                .build();
+        // 默认如果保存对象，使用jdk序列化机制，序列化后的数据保存到redis中
+        redisTemplate.opsForValue().set("user", user);
+
+        // 使用配置类修改后的json序列化机制存储数据
+        userRedisTemplate.opsForValue().set("user", user);
+    }
 
     @Test
     void contextLoads() {

@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * 考勤系统用户信息实体类
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KqUser {
+public class KqUser implements Serializable {
 
     private String user_id;
     private String user_name;

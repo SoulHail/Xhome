@@ -1,6 +1,7 @@
 package com.codebear.xhome;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @EnableCaching: 开启缓存功能
  */
 @Slf4j
+//@MapperScan("com.codebear.xhome.mapper")
 @SpringBootApplication
 @EnableCaching // 开启基于注解的cache缓存模式
 //@EnableAsync // 开启异步注解功能

@@ -1,20 +1,23 @@
 package com.codebear.xhome.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * JPA整合虚拟机数据库对象
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity // 告诉JPA这是一个实体类（和数据表映射的类）
 @Table(name = "tb1_user") //@Table来指定和哪个数据表对应；如果省略，默认表名和类名相同user
-public class User {
+public class User implements Serializable {
 
     @Id // 这是一个主键
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增主键

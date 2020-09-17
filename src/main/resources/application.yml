@@ -10,19 +10,11 @@ spring:
     url: jdbc:mysql://localhost:3306/kq?serverTimezone=UTC
     username: root
     password: root123
+    type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
     # 虚拟机数据库
 #    url: jdbc:mysql://192.168.232.130:3306/jpa?serverTimezone=UTC
 #    username: root
 #    password: 123456
-  # 运行JPA自动创建数据表
-#  jpa:
-#    hibernate:
-#      # 更新或者创建数据表结构
-#      ddl-auto: update
-#    # 指定数据源类型为druid
-#    show-sql: true
-
-    type: com.alibaba.druid.pool.DruidDataSource
 
     # druid下的其他属性配置；需要另写配置文件才能生效，见DruidConfig类
     initialSize: 5 # 数据库连接池大小
@@ -40,12 +32,28 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     #        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-  # 邮件配置
-  mail:
-    username: ccc@qq.com
-    password: bfnwlguvdbdlbeah #授权码
-    host: smtp.qq.com
-    #properties: mail.smtp.ssl.enable = true # 安全性设置
+
+  # 运行JPA自动创建数据表
+  jpa:
+    hibernate:
+      # 更新或者创建数据表结构
+      ddl-auto: update
+    # 指定数据源类型为druid
+    show-sql: true
+
+  # 邮件配置（此处写真实QQ邮箱，会有安全隐患，被Github官方警告；写假的邮箱启动会报邮箱错误，但是不影响项目正常启动，为代码简洁，此处注掉，需要此功能可打开此注释）
+#  mail:
+#    username: ccc@qq.com
+#    password: bfnwlguvdbdlbeah #授权码
+#    host: smtp.qq.com
+#    #properties: mail.smtp.ssl.enable = true # 安全性设置
+
+  # redis配置
+  redis:
+    host: 192.168.232.130
+  cache:
+    redis:
+      use-key-prefix: true
 
 #  rabbitmq:
 #    host: localhost
