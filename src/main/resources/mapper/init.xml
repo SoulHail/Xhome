@@ -13,3 +13,5 @@
   	  select user_id,user_name,password,major,role from at_user where user_id=#{userId} and password=#{password}
     </select>-->
 </mapper>
+
+<!-- xml文件模板 -->

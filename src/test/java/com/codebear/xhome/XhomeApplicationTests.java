@@ -4,6 +4,8 @@ import com.codebear.xhome.bean.Person;
 import com.codebear.xhome.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
@@ -24,6 +26,11 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 单元测试
@@ -47,7 +54,7 @@ class XhomeApplicationTests {
     @Autowired
     private AmqpAdmin amqpAdmin;
 
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSenderImpl mailSender;
 
     @Autowired
@@ -55,6 +62,9 @@ class XhomeApplicationTests {
 
     @Autowired
     private RedisTemplate redisTemplate; // k-v不限
+
+    @Autowired
+    private Redisson redisson;
 
     @Autowired
     private RedisTemplate<Object, User> userRedisTemplate;
@@ -114,7 +124,6 @@ class XhomeApplicationTests {
      * 测试消息队列
      * 1、单播（点对点）
      * 2、广播
-     * <p>
      * 跨系统接收消费信息，见RabbitMqService
      */
     @Test
@@ -130,6 +139,12 @@ class XhomeApplicationTests {
         //广播模式，不需要路由键routeKey
         //rabbitTemplate.convertAndSend("exchange","",object);
 
+        // 示例：传一个Map消息
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", "这是一个消息");
+        map.put("data", Arrays.asList("hello", 123, true));
+        rabbitTemplate.convertAndSend("exchange.dir", "xee.news", map);
+
     }
 
     /**
@@ -137,7 +152,7 @@ class XhomeApplicationTests {
      */
     @Test
     public void testRabbitMqReceive() {
-        Object o = rabbitTemplate.receiveAndConvert("queneName");
+        Object o = rabbitTemplate.receiveAndConvert("xee.news");
         System.out.println(o.getClass());
         System.out.println(o);
     }
@@ -269,6 +284,38 @@ class XhomeApplicationTests {
 
         // 使用配置类修改后的json序列化机制存储数据
         userRedisTemplate.opsForValue().set("user", user);
+    }
+
+    /**
+     * Redis来实现分布式锁:
+     * 1、Redis单线程操作的特性，哪怕一毫秒内同时来了上千次请求，Redis也会给请求进行排队，但第一个请求入值成功后，其他请求就会失败，
+     * 达到分布式锁的效果。注意，再单次入值成功后，需要把该值删除，否成造成死锁；
+     * 2、为保证解锁百分百成功，不会被其他流程影响，需将解锁步骤放在finally里；
+     * 3、可能会出现在执行finally前出现宕机的情况，更好的方式，是在设置key时，加一个失效时间；
+     * 4、究极高并发的场景下，即使加了失效时间，也可能会出现在redis失效后，代码还未执行到释放锁的代码，造成某个线程的锁会被其他线程释放掉的情况，
+     * 因此，做好再加上一个线程ID来保证自己线程的锁只能被自己释放掉；
+     * 5、最好的方式，用Redisson    
+     */
+    @Test
+    public void redisLockTest() {
+        String lockName = "lock001";
+        String clientId = UUID.randomUUID().toString();
+        RLock redissonLock = redisson.getLock(lockName);
+        try {
+            // 上锁并设置自动失效时间
+            /*Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockName, clientId, 10, TimeUnit.SECONDS); // redis.setnx(key,value)
+            if (!result) {
+                System.out.println("error!");
+            }*/
+            redissonLock.lock(30,TimeUnit.SECONDS);
+        } finally {
+            redissonLock.unlock();
+            /*if (clientId.equals(stringRedisTemplate.opsForValue().get(lockName))) {
+                // 解锁
+                stringRedisTemplate.delete(lockName);
+            }*/
+        }
+
     }
 
     @Test

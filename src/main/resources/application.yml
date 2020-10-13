@@ -55,10 +55,11 @@ spring:
     redis:
       use-key-prefix: true
 
-#  rabbitmq:
-#    host: localhost
-#    username: guest
-#    password: guest
+  # rabbitmq配置
+  rabbitmq:
+    host: 192.168.232.130
+    username: xeee
+    password: xeee
 
 mybatis:
   # mapper映射文件位置
