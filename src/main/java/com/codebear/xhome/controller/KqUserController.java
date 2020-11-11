@@ -3,6 +3,7 @@ package com.codebear.xhome.controller;
 import com.codebear.xhome.entity.KqUser;
 import com.codebear.xhome.mapper.KqUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ public class KqUserController {
     private KqUserMapper kqUserMapper;
 
     @GetMapping("/kquser/{id}")
-    public KqUser getKqUser(@PathVariable("id") String id){
+    public KqUser getKqUser(@PathVariable("id") String id) {
         return kqUserMapper.getKqUser(id);
     }
 
@@ -34,5 +35,12 @@ public class KqUserController {
     public String updateKqUser(@PathVariable("id") String id){
         kqUserMapper.updateKqUser(id);
         return id;
+    }
+
+    @Transactional
+    @GetMapping("/tan/{id}")
+    public void tan(@PathVariable("id") String id){
+        kqUserMapper.updateKqUser(id);
+        int i = 10 / 0;
     }
 }
